@@ -1,15 +1,15 @@
 import {
-  WebSocketGateway,
-  WebSocketServer,
-  SubscribeMessage,
+  ConnectedSocket,
+  MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
-  MessageBody,
-  ConnectedSocket,
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { RedisService } from '../redis/redis.service.js';
 import { LoggingService } from '../logging/logging.service.js';
+import { RedisService } from '../redis/redis.service.js';
 
 interface ChatMessage {
   id: string;
@@ -31,7 +31,10 @@ interface UserData {
 
 @WebSocketGateway({
   cors: {
-    origin: ['http://localhost:3000'],
+    origin: [
+      'http://localhost:3000',
+      'https://stock-regret-8thaihnqm-jaenam1212s-projects.vercel.app',
+    ],
     credentials: true,
   },
 })

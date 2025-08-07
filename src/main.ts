@@ -6,7 +6,11 @@ async function bootstrap() {
 
   // CORS 설정
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost:3001'],
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'https://stock-regret-8thaihnqm-jaenam1212s-projects.vercel.app',
+    ],
     credentials: true,
   });
 

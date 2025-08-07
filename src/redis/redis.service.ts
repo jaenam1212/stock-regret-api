@@ -6,32 +6,31 @@ export class RedisService implements OnModuleDestroy {
   private readonly redis: Redis;
 
   constructor() {
-    // Railway 환경변수에서 Redis 설정 가져오기
+    // Railway 환경변수에서 Redis 설정 가져오기/*  */
+    const redisPublicUrl = process.env.REDIS_PUBLIC_URL;
     const redisUrl = process.env.REDIS_URL;
 
+    const connectionUrl = redisPublicUrl || redisUrl;
     console.log('🔍 Redis 환경변수 확인:');
     console.log('REDIS_URL:', redisUrl);
-    console.log('REDIS_HOST:', process.env.REDIS_HOST);
-    console.log('REDIS_PORT:', process.env.REDIS_PORT);
 
-    if (redisUrl) {
-      // Railway Redis URL 사용
-      console.log('🚀 Railway Redis URL 사용');
-      this.redis = new Redis(redisUrl, {
+    if (connectionUrl) {
+      this.redis = new Redis(connectionUrl, {
         maxRetriesPerRequest: 3,
+        connectTimeout: 10000,
+        lazyConnect: true,
       });
     } else {
-      // 로컬 개발용 Redis 설정
       console.log('🏠 로컬 Redis 설정 사용');
       this.redis = new Redis({
-        host: process.env.REDIS_HOST || 'localhost',
-        port: parseInt(process.env.REDIS_PORT || '6379'),
-        password: process.env.REDIS_PASSWORD,
+        host: 'localhost',
+        port: 6379,
         maxRetriesPerRequest: 3,
+        connectTimeout: 10000,
       });
     }
 
-    this.redis.on('error', (error) => {
+    this.redis.on('error', (error: Error) => {
       console.error('Redis connection error:', error);
       // 에러 발생 시에도 앱이 계속 실행되도록
       console.log('⚠️ Redis 연결 실패, 일부 기능이 제한될 수 있습니다.');

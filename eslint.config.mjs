@@ -28,7 +28,25 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-floating-promises': 'warn',
-      '@typescript-eslint/no-unsafe-argument': 'warn'
+      '@typescript-eslint/no-unsafe-argument': 'warn',
+      'prettier/prettier': [
+        'error',
+        {
+          arrowParens: 'always',
+          semi: true,
+          trailingComma: 'all',
+          singleQuote: true,
+          printWidth: 80,
+          tabWidth: 2,
+          useTabs: false,
+          bracketSpacing: true,
+          endOfLine: 'lf',
+        },
+      ],
+      // Prettier와 충돌하는 규칙들 비활성화
+      'arrow-parens': 'off',
+      '@typescript-eslint/arrow-parens': 'off',
+      'prefer-arrow-callback': 'off',
     },
   },
 );
