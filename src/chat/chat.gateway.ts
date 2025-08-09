@@ -31,10 +31,19 @@ interface UserData {
 
 @WebSocketGateway({
   cors: {
-    origin: [
-      'http://localhost:3000',
-      'https://stock-regret-8thaihnqm-jaenam1212s-projects.vercel.app',
-    ],
+    origin: (origin, callback) => {
+      const originsEnv = process.env.CORS_ORIGINS || '';
+      const parsed = originsEnv
+        .split(',')
+        .map((o) => o.trim())
+        .filter(Boolean);
+      const whitelist = parsed.length > 0 ? parsed : ['http://localhost:3000'];
+      if (!origin || whitelist.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   },
 })

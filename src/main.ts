@@ -5,12 +5,16 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // CORS 설정
+  const originsEnv = process.env.CORS_ORIGINS || '';
+  const parsedOrigins = originsEnv
+    .split(',')
+    .map((o) => o.trim())
+    .filter(Boolean);
+  const defaultOrigins = ['http://localhost:3000', 'http://localhost:3001'];
+  const origins = parsedOrigins.length > 0 ? parsedOrigins : defaultOrigins;
+
   app.enableCors({
-    origin: [
-      'http://localhost:3000',
-      'http://localhost:3001',
-      'https://stock-regret-8thaihnqm-jaenam1212s-projects.vercel.app',
-    ],
+    origin: origins,
     credentials: true,
   });
 
