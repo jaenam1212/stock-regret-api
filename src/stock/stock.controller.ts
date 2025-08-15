@@ -6,7 +6,7 @@ export class StockController {
   constructor(private readonly stockService: StockService) {}
 
   @Get('data')
-  async getStockData(@Query('symbol') symbol: string = 'AAPL'): Promise<any> {
+  async getStockData(@Query('symbol') symbol: string = 'NVDA'): Promise<any> {
     return this.stockService.getStockData(symbol);
   }
 

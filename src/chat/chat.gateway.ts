@@ -31,19 +31,7 @@ interface UserData {
 
 @WebSocketGateway({
   cors: {
-    origin: (origin, callback) => {
-      const originsEnv = process.env.CORS_ORIGINS || '';
-      const parsed = originsEnv
-        .split(',')
-        .map((o) => o.trim())
-        .filter(Boolean);
-      const whitelist = parsed.length > 0 ? parsed : ['http://localhost:3000'];
-      if (!origin || whitelist.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
+    origin: true, // 임시로 모든 origin 허용
     credentials: true,
   },
 })
