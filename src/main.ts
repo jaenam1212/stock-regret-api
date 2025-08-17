@@ -11,15 +11,15 @@ async function bootstrap() {
     .map((o) => o.trim())
     .filter(Boolean);
   const defaultOrigins = [
-    'http://localhost:3000', 
-    'http://localhost:3001', 
-    'http://localhost:3002', 
-    'http://localhost:3003', 
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:3002',
+    'http://localhost:3003',
     'http://localhost:3004',
     'https://stock-regret.vercel.app',
     'https://stock-regret-rcoktizzu-jaenam1212s-projects.vercel.app',
     'https://asalggul.kr',
-    'https://www.asalggul.kr'
+    'https://www.asalggul.kr',
   ];
   const origins = parsedOrigins.length > 0 ? parsedOrigins : defaultOrigins;
 
