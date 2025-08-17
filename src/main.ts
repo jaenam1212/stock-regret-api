@@ -17,12 +17,14 @@ async function bootstrap() {
     'http://localhost:3003', 
     'http://localhost:3004',
     'https://stock-regret.vercel.app',
-    'https://stock-regret-rcoktizzu-jaenam1212s-projects.vercel.app'
+    'https://stock-regret-rcoktizzu-jaenam1212s-projects.vercel.app',
+    'https://asalggul.kr',
+    'https://www.asalggul.kr'
   ];
   const origins = parsedOrigins.length > 0 ? parsedOrigins : defaultOrigins;
 
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'http://localhost:3003', 'http://localhost:3004', 'https://stock-regret.vercel.app', 'https://stock-regret-rcoktizzu-jaenam1212s-projects.vercel.app'],
+    origin: origins,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin'],
     credentials: true,
