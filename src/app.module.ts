@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { StockModule } from './stock/stock.module.js';
 import { ChatModule } from './chat/chat.module.js';
 import { LoggingModule } from './logging/logging.module.js';
+import { SecurityMiddleware } from './common/middleware/security.middleware.js';
 
 @Module({
   imports: [
@@ -18,4 +19,10 @@ import { LoggingModule } from './logging/logging.module.js';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(SecurityMiddleware)
+      .forRoutes('*');
+  }
+}
