@@ -45,15 +45,41 @@ interface ExchangeRateResponse {
 export class StockService {
   constructor(private configService: ConfigService) {}
 
+  private CRYPTO_KEYWORDS = [
+    // 영어 이름
+    'bitcoin', 'ethereum', 'binancecoin', 'cardano', 'solana', 'polkadot', 'dogecoin',
+    'avalanche', 'polygon', 'chainlink', 'cosmos', 'fantom', 'near', 'algorand',
+    'flow', 'apecoin', 'tezos', 'elrond', 'axie-infinity', 'decentraland', 'sandbox',
+    'enjincoin', 'gala', 'chromaway', 'litecoin', 'ripple', 'tether',
+    // 영어 심볼
+    'btc', 'eth', 'bnb', 'ada', 'sol', 'dot', 'doge', 'avax', 'matic', 'link',
+    'atom', 'ftm', 'near', 'algo', 'flow', 'ape', 'xtz', 'egld', 'axs', 'mana',
+    'sand', 'enj', 'gala', 'chr', 'ltc', 'xrp', 'usdt', 'usdc',
+    // 한글 이름
+    '비트코인', '이더리움', '바이낸스코인', '에이다', '솔라나', '폴카닷', '도지코인',
+    '아발란체', '폴리곤', '체인링크', '코스모스', '팬텀', '니어', '알고랜드',
+    '플로우', '에이프코인', '테조스', '디센트럴랜드', '샌드박스', '엔진코인',
+    '갈라', '라이트코인', '리플', '테더'
+  ];
+
   private isKoreanStock(symbol: string): boolean {
     // 6자리 숫자인 경우 한국 주식으로 판단
     return /^\d{6}$/.test(symbol);
+  }
+
+  private isCrypto(symbol: string): boolean {
+    const normalizedSymbol = symbol.toLowerCase().trim();
+    return this.CRYPTO_KEYWORDS.includes(normalizedSymbol);
   }
 
   private formatSymbolForYahoo(symbol: string): string {
     // 한국 주식인 경우 .KS 접미사 추가
     if (this.isKoreanStock(symbol)) {
       return `${symbol}.KS`;
+    }
+    // 암호화폐인 경우 -USD 접미사 추가 (Yahoo Finance 암호화폐 형식)
+    if (this.isCrypto(symbol)) {
+      return `${symbol.toUpperCase()}-USD`;
     }
     return symbol;
   }
@@ -85,6 +111,7 @@ export class StockService {
       const adjclose = result.indicators?.adjclose?.[0]?.adjclose || [];
 
       const isKorean = this.isKoreanStock(symbol);
+      const isCrypto = this.isCrypto(symbol);
       const formattedData: StockDataItem[] = timestamps
         .map((timestamp: number, index: number) => ({
           time: String(timestamp),
@@ -114,9 +141,9 @@ export class StockService {
         changePercent,
         data: formattedData,
         meta: {
-          companyName: result.meta?.longName || `${symbol.toUpperCase()} Inc.`,
-          currency: this.isKoreanStock(symbol) ? 'KRW' : (result.meta?.currency || 'USD'),
-          exchangeName: this.isKoreanStock(symbol) ? 'KRX' : (result.meta?.exchangeName || 'NASDAQ'),
+          companyName: result.meta?.longName || `${symbol.toUpperCase()} ${isCrypto ? '' : 'Inc.'}`,
+          currency: isKorean ? 'KRW' : (result.meta?.currency || 'USD'),
+          exchangeName: isKorean ? 'KRX' : (isCrypto ? 'Crypto' : (result.meta?.exchangeName || 'NASDAQ')),
           lastUpdated: new Date().toISOString(),
         },
       };
